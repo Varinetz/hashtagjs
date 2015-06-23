@@ -9,11 +9,37 @@
 (function($) {
 
   // Collection method.
-  $.fn.hashtagjs = function() {
-    return this.each(function(i) {
-      // Do something awesome to each selected element.
-      $(this).html('awesome' + i);
+  $.fn.hashtagjs = function(options) {
+    var str = this.html();
+    var re = /(\#\S\w+)/g;
+    var socnets = $.hashtagjs.options.socnets;
+
+
+    this.html(str.replace(re,'<a class="hashtagjs_tag" href="#">$1</a>'));
+
+    $('a.hashtagjs_tag').each(function() {
+
+      var linkholder = $('<div/>', {
+                          css: {
+                          },
+                          class: 'hashtagjs_linkholder'
+                        });
+
+      for (prop in socnets) {
+      var linkbuild = function() {
+        if (prop === true) {
+          $('<a/>', {
+            class: 'hashtagjs_'+ prop,
+            href: 'http://twitter'+this.text()
+          }).appendTo(linkholder);
+        }
+      }
+       $(this).after(linkholder);
+    };
     });
+
+
+
   };
 
   // Static method.
@@ -26,7 +52,13 @@
 
   // Static method default options.
   $.hashtagjs.options = {
-    punctuation: '.'
+    theme: 'light',
+    socnets: {      
+      facebook:   true,
+      instagram:  true,
+      twitter:    true,
+      vkontakte:  true
+    }
   };
 
   // Custom selector.
